@@ -1,0 +1,56 @@
+# Dependencies
+node_modules
+
+# Builds
+dist
+build
+
+# Environment variables
+.env
+.venv 
+
+# Logs
+*.log
+
+#config
+config.json
+.DS_Store
+
+
+# pylache files 
+__pycache__/
+
+#alembic stuff 
+alembic/
+
+# auth 
+auth 
+
+#vs code 
+.vscode/
+
+
+
+
+
+
+# Python virtual environments
+.venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Build artifacts and temporary files
+frontend/.vite/
+frontend/.vite/deps_temp_*/
+
+# Logs
+*.log

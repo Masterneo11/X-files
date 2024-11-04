@@ -1,0 +1,20 @@
+
+/* Body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(242,244,247);
+
+} */
+body {
+  height: 100vh;
+  width: 100vw;
+  /* background-color: rgb(242,244,247); */
+  background: linear-gradient(to right, #fdece5, #f7f5ff, #eef4ff);
+
+
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
