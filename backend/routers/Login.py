@@ -6,6 +6,8 @@ from database import get_db
 import models 
 import schemas
 from schemas import ( CreateUser)
+from models import User
+
 
 router = APIRouter()
 #hi
@@ -26,6 +28,12 @@ async def get_Users(session: Session = Depends(get_db)) -> list[models.User]:
 
 
 
+@router.get("/users/by-email/{email}")
+def get_user_by_email(email: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == email).first()
+    if user == None:
+        raise HTTPException(status_code=404, detail=" user does not exist in my current database")
+    return user
 
 
 def hash_password(password: str) -> bytes:
@@ -43,14 +51,11 @@ async def create_user(user_data: CreateUser, session: Session = Depends(get_db))
     if existing_user:
         raise HTTPException(status_code=400, detail="Email or username already registered.")
     
-    # Hash the password
-    hashed_password = hash_password(user_data.password)
     
     # Create a new user instance
     new_user = models.User(
         name=user_data.name,
-        email=user_data.email,  # Use the provided email
-        password=hashed_password.decode(),  # Store hashed password as string
+        email=user_data.email,
         username=user_data.username,
         photo=user_data.photo
     )
@@ -76,3 +81,22 @@ async def create_user(user_data: CreateUser, session: Session = Depends(get_db))
 #     session.commit()
 #     session.refresh(user)
 #     return user
+
+
+
+@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(user_id: int, session: Session = Depends(get_db)):
+    # Check if the user exists
+    user = session.query(models.User).filter(models.User.id == user_id).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Here you can add additional checks, such as ensuring that deleting this user
+    # doesn't violate any foreign key constraints or affect other entities (e.g., user-related data).
+    
+    # Delete the user from the database
+    session.delete(user)
+    session.commit()
+
+    return {"detail": "User deleted successfully"}

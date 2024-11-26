@@ -28,7 +28,7 @@ auth
 
 #vs code 
 .vscode/
-
+/src/auth_config.json
 
 
 

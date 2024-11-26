@@ -2,16 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import your routers from the `routers` directory
-from routers import Login, Event
+from routers import Login, Event, CreateAccount, Profile, Clubs, Messages, friends
 
-app = FastAPI(title="My App", version="1.0.0")
+from fastapi import FastAPI
+
+app = FastAPI()
 
 # CORS configuration (adjust origins as needed)
 origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:5173"],  # Allow your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,6 +22,16 @@ app.add_middleware(
 # Include your routers hi
 app.include_router(Login.router, tags=["Login"])
 app.include_router(Event.router, prefix="/events", tags=["Events"])
+app.include_router(Profile.router, prefix="/profile", tags=["Profile"])  # New profile router
+app.include_router(CreateAccount.router, prefix="/create_account", tags=["CreateAccount"])
+app.include_router(Clubs.router, prefix="/Clubs", tags=["Clubs"])
+app.include_router(Profile.router, prefix="/Profile", tags=["Profile"])
+app.include_router(friends.router, prefix="/Friends", tags=["Friends"])
+app.include_router(Messages.router, prefix="/Messages", tags=["Messages"])
+# app.include_router(friends.router, prefix="/Friends", tags=["Frieds"])
+
+
+
 
 # app.include_router(CreateAccount.router, tags=["CreateAccount"])
 

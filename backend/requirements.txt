@@ -5,3 +5,9 @@ python-decouple
 sqlalchemy
 uvicorn
 sqlmodel
+
+
+flask>=2.0.3
+python-dotenv>=0.19.2
+authlib>=1.0
+requests>=2.27.1

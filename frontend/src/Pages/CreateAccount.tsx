@@ -1,65 +1,51 @@
 
-import NameField from "../Components/NameField";
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
+import { RedirectLoginOptions, useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const CreateAccount: React.FC = () => {
-
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConformPassword] = useState<string>("");
-    const [phoneNumber, setPhoneNumber] = useState<string>("");
-    const [userName, setUserName] = useState<string>("");
-
-
-
-    return (<>
-        <div className=" container mt-28 flex flex-col items-center h-144 w-100">
-            {/* <NameField
-                Name="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Name" /> */}
-            <input
-                placeholder="Email"
-                value={email}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                onChange={(e) => setEmail(e.target.value)}></input>
-            <input
-                placeholder="Name"
-                value={name}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                onChange={(e) => setName(e.target.value)}></input>
-            <input
-                placeholder="Username"
-                value={userName}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                onChange={(e) => setUserName(e.target.value)}></input>
-            <input
-                placeholder="Password"
-                value={password}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                onChange={(e) => setPassword(e.target.value)}></input>
-            <input
-                placeholder="Confirm password"
-                value={confirmPassword}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                onChange={(e) => setConformPassword(e.target.value)}></input>
-            <input
-                placeholder=" Optional Phone Number"
-                value={phoneNumber}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                onChange={(e) => setPhoneNumber(e.target.value)}></input>
-
-            <Link to="/login" className=" btn btn-primary w-full mt- text-sm "> Complete Account </Link>
-
-
-
-        </div>
-
-    </>)
+// Extend RedirectLoginOptions to include screen_hint
+interface CustomRedirectLoginOptions extends RedirectLoginOptions {
+    screen_hint?: string;
 }
 
+const CreateAccount: React.FC = () => {
+    const { isAuthenticated, loginWithRedirect } = useAuth0();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/MakeAccount"); // Redirect logged-in users to the home page
+        }
+    }, [isAuthenticated, navigate]);
+
+    const handleSignUp = () => {
+        // Use the extended interface to include screen_hint
+        // const options: CustomRedirectLoginOptions = {
+        //     screen_hint: "signup", // Force the signup screen
+        //     openUrl: "login", // Forces the login/signup flow regardless of session
+        //     redirect_uri: `${window.location.origin}/findgame`, // Redirect after signup
+        // };
+        loginWithRedirect(); // Pass the custom options
+    };
+
+
+
+    return (
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+            <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm w-full text-center">
+                <h1 className="text-2xl font-semibold mb-4">Create an Account</h1>
+                <p className="text-gray-600 mb-6">Sign up to join Omada Gaming Center.</p>
+                <button
+                    onClick={handleSignUp}
+                    className="bg-green px-6 py-2 rounded hover:bg-green-600 transition duration-300"
+                >
+                    signup
+                </button>
+            </div>
+        </div>
+    );
+};
+
 export default CreateAccount;
+

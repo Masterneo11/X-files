@@ -1,25 +1,50 @@
+import Map, { Marker } from 'react-map-gl';
+import React, { useState, useEffect } from 'react';
+import MyMap from '../Components/MyMap'; // Import the MyMap component
 
-import NameField from "../Components/NameField";
-import React, { useState, useEffect } from "react";
+interface Event {
+    latitude: number;
+    longitude: number;
+    name: string;
+    id: string; // Add this
+
+
+}
 
 const FindGames: React.FC = () => {
+    const [latitude, setLatitude] = useState<number>(37.0965);
+    const [longitude, setLongitude] = useState<number>(-113.5684);
+    const [eventName, setEventName] = useState<string>("Loading Event...");
+    const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<Event[] | []>([]);
 
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConformPassword] = useState<string>("");
-    const [phoneNumber, setPhoneNumber] = useState<string>("");
-    const [userName, setUserName] = useState<string>("");
+    useEffect(() => {
+        const fetchEventData = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/events/Event");
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data: Event[] = await response.json();
+                setData(data)
+                // if (latitude !== undefined && longitude !== undefined) {
+                //     setLatitude(parseFloat(data.latitude.toString()));
+                //     setLongitude(parseFloat(data.longitude.toString()));
+                //     setEventName(data.name); }
+                console.log(data)
+            } catch (error) {
+                console.error('Error fetching event data:', error);
+                setError('Failed to load event data. Please try again later.');
+            }
+        };
+        fetchEventData();
+    }, []);
+    return (
+        <>
 
+            {!error && <MyMap points={data} longitude={longitude} latitude={latitude} />}
 
-
-    return (<>
-
-        <div> hello there </div>
-        <h1> Find Games</h1>
-
-
-    </>)
+        </>
+    );
 }
 
 export default FindGames;
+

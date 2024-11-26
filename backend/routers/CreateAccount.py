@@ -1,20 +1,24 @@
-# from fastapi import APIRouter, Depends
-# from sqlmodel import Session, select
+from fastapi import APIRouter, Depends
+from sqlmodel import Session, select
 
-# from database import get_db
-# import models
-# from models import User, Event
-# import schemas
-# from fastapi import HTTPException
-# from schemas import(
-#     EventCreateRequest,
-#     FullEventInformationRequest,
-#     create_user
-# )
+from database import get_db
+import models
+from models import User, Event
+import schemas
+from fastapi import HTTPException
+from schemas import(
+    EventCreateRequest,
+    FullEventInformationRequest,
 
-# router = APIRouter()
+)
+
+router = APIRouter()
 
 
+@router.post("/create")
+async def create_account():
+    # Your endpoint logic here
+    return {"message": "Account created successfully"}
 
 # @app.post("/users/", response_model=create_user)
 # async def create_user(user_data: create_user, session: Session = Depends(get_db)):

@@ -9,31 +9,89 @@ class User(BaseModel):
     email: str
     username: str
     photo: Optional[str] = None
-    password: str
 
     class Config:
         orm_mode = True
 
 class CreateUser(BaseModel):
     name: str
-    email: EmailStr
-    password: str
     username: str
+    email: str
     photo: str | None = None 
 
 class EventOverviewResponse(BaseModel):
     event_title: str
     event_month: str
-    event_day: int
+    event_day: str
     start_time: int
     creator: str
+    longitutde: float
+    latitude: float
 
 
 class EventBase(BaseModel):
+    event_title: str
+    location: str
+    event_day: str
+    event_month: str
+    start_time: str
+    end_time: str
+    description: Optional[str] = None
+    max_players: int
+    public: Optional[bool] = None
+    user_id: int
+    longitude: Optional[float] = None
+    latitude: Optional[float] = None
+
+
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    username: str
+
+    class Config:
+        from_attributes = True
+
+
+# class UserResponse(BaseModel):
+#     id: int
+#     name: str
+#     email: str
+#     photo: Optional[str] = None
+    
+#     class Config:
+#         from_attributes = True  # Allows Pydantic to use ORM objects
+    
+
+
+class EventResponse(BaseModel):
     id: int
     event_title: str
     location: str
-    event_day: int
+    event_day: str
+    event_month: str
+    start_time: str
+    end_time: str
+    description: Optional[str]
+    max_players: Optional[int]
+    public: Optional[bool]
+    visible_address: Optional[str]
+    invite_only: Optional[str]
+    latitude: Optional[float]  # Optional because it might not be present in some events
+    longitude: Optional[float]
+
+    creator: Optional[UserResponse]  # Nested model
+    class Config:
+            orm_mode = True
+    
+
+    
+class FindMapEvents(BaseModel):
+    id: int
+    event_title: str
+    location: str
+    event_day: str
     event_month: str
     start_time: str
     end_time: str
@@ -41,18 +99,24 @@ class EventBase(BaseModel):
     max_players: int
     public: bool
     user_id: int
-    
+    longitutde: float
+    lattitude: float
 
 
 class FullEventInformationRequest(BaseModel):
     id: int
     event_title: str
     event_month: str
-    event_day: int
+    event_day: str
     start_time: str
     end_time: str
     location: Optional[str] = None
-    description: str
+    description: Optional[str]
+    longitude: Optional[float]
+    latitude: Optional[float]
+    user_id: int
+    
+    creator: Optional[UserResponse]  # Nested model
     attending_users_list: list[str] = []  # List of attendee names or usernames
 
     class Config:
@@ -69,14 +133,61 @@ class EventRead(EventBase):
     user_id: int
 
     class Config:
-        orm_mode = True 
+        orm_mode = True
 
-# class FullEventInformationRequest(BaseModel):
+
+class FriendshipRequest(BaseModel):
+    user_id_1: int
+    user_id_2: int
+
+
+class FriendshipRequestResponse(BaseModel):
+    id: int
+    user_id_1: int
+    user_id_2: int
+    friendship_status: str
+
+    class Config:
+        orm_mode = True
+
+class FriendshipResponse(BaseModel):
+    id: int
+    user_id_1: int
+    user_id_2: int
+    friendship_status: str
+
+    class Config:
+        orm_mode = True
+
+
+class MessageResponse(BaseModel):
+    id: int
+    sender_id: int
+    receiver_id: int
+    content: str
+    timestamp: Optional[str]
+    status: str
+
+    class Config:
+        orm_mode = True
+# class UserResponse(BaseModel):
 #     id: int
-#     event_title: str
-#     start_time: str
-#     end_time: str
-#     date: str
-#     location: Optional[str] = None
-#     description: str
-#     attending_players_list: list[str]
+#     name: str
+#     username: str
+#     email: str
+
+#     class Config:
+#         orm_mode = True
+
+
+
+# Request schema for leaving an event
+class RemoveUserRequest(BaseModel):
+    event_id: int  # ID of the event
+    auth0_user_id: str  # Auth0 user ID
+
+# Response schema for leaving an event
+class RemoveUserResponse(BaseModel):
+    message: str  # Success message
+    event_id: int  # Event ID
+    removed_user_id: str  # The ID
