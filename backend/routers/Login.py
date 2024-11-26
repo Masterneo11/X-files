@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from typing import List
-import bcrypt
+
 from database import get_db
 import models 
 import schemas
@@ -36,10 +36,10 @@ def get_user_by_email(email: str, db: Session = Depends(get_db)):
     return user
 
 
-def hash_password(password: str) -> bytes:
-    # Generate a salt and hash the password
-    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    return hashed_password
+# def hash_password(password: str) -> bytes:
+#     # Generate a salt and hash the password
+#     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+#     return hashed_password
 
 @router.post("/users/", response_model=CreateUser)
 async def create_user(user_data: CreateUser, session: Session = Depends(get_db)):
