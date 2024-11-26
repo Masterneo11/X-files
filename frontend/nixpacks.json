@@ -1,0 +1,23 @@
+{
+    "phases": {
+      "install": {
+        "commands": [
+          "npm install"
+        ]
+      },
+      "build": {
+        "commands": [
+          "npm run build"
+        ]
+      },
+      "start": {
+        "commands": [
+          "serve -s build"
+        ]
+      }
+    },
+    "env": {
+      "PORT": "3000"
+    }
+  }
+  
