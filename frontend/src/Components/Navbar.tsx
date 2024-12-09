@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <nav className="bg-gray-800 p-4">
+        <nav className="bg-green-700 p-4">
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
                 <div className="text-blue text-2xl font-bold"> </div>
@@ -24,7 +24,6 @@ const Navbar: React.FC = () => {
                     <Link to="/clubs" className="text-white hover:text-white-300">Clubs</Link>
                     <Link to="/profile" className="text-white hover:text-gray-300">Profile</Link>
                     <div className="text-white hover:text-gray-300"> <SettingsModal /> </div>
-                    <Link to="messages" className='text-white'>messages</Link>
                 </div>
 
                 {/* Hamburger menu for mobile */}

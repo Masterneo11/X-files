@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import "./Modal.css"
 interface ModalProps {
-    onSubmit: (name: string, username: string, email: string, photo?: string) => void;
+    onSubmit: (name: string, username: string,
+        // email: string, photo?: string
+    ) => void;
     onClose: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({ onSubmit, onClose }) => {
     const [name, setName] = useState<string>("");
     const [username, setUsername] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [photo, setPhoto] = useState<string>("");
+    // const [email, setEmail] = useState<string>("");
+    // const [photo, setPhoto] = useState<string>("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(name, username, email, photo);
+        onSubmit(name, username,
+            //  email, photo
+        );
     };
 
     return (
@@ -37,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, onClose }) => {
                         required
                         className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
-                    <input
+                    {/* <input
                         type="email"
                         placeholder="Email"
                         value={email}
@@ -51,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, onClose }) => {
                         value={photo}
                         onChange={(e) => setPhoto(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
+                    /> */}
                     <button type="submit" className="w-full bg-green-500 text-white rounded py-2 hover:bg-green-600 transition duration-300">
                         Submit
                     </button>

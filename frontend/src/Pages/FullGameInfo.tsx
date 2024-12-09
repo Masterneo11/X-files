@@ -68,18 +68,39 @@ const FullGameInfo: React.FC = () => {
             setLoading(false);
         }
     };
+    const fetchDatabaseUserId = async (auth0Sub: string) => {
+        try {
+            const response = await fetch(`http://localhost:8000/users/get_user_id?sub=${auth0Sub}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-
-    // Leave the event
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Resolved user ID:", data.user_id); // Debugging line
+                return data.user_id; // Return the numeric user ID
+            } else {
+                const errorData = await response.json();
+                console.error("Error response from /get_user_id:", errorData);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching user ID:", error);
+            return null;
+        }
+    };
     const leaveEvent = async () => {
-        if (!userId) {
+        if (!user?.email) {
             alert("You must be logged in to leave the event.");
             return;
         }
 
         try {
+            // Use email as user ID
             const response = await fetch(
-                `http://localhost:8000/events/events/${event_id}/remove_user/${userId}`,
+                `http://localhost:8000/events/events/${event_id}/remove_user/${user.email}`,
                 {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
@@ -92,7 +113,7 @@ const FullGameInfo: React.FC = () => {
 
                 // Update attendees list
                 setAttendees((prevAttendees) =>
-                    prevAttendees.filter((attendee) => attendee.id !== Number(userId))
+                    prevAttendees.filter((attendee) => attendee.email !== user.email)
                 );
             } else {
                 const errorData = await response.json();
@@ -103,6 +124,8 @@ const FullGameInfo: React.FC = () => {
             alert("An error occurred while leaving the event.");
         }
     };
+
+
     const handleMessageClick = (attendeeId: number) => {
         if (!userId) {
             alert("You must be logged in to send messages.");

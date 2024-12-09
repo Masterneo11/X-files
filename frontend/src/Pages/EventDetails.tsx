@@ -27,6 +27,8 @@ interface Attendee {
 const API_BASE_URL = "http://localhost:8000";
 
 const EventDetails: React.FC = () => {
+    const { event_id } = useParams<{ event_id: string }>();
+
     const { id } = useParams<{ id: string }>();
     const { user, isAuthenticated } = useAuth0();
     const [event, setEvent] = useState<Event | null>(null);
@@ -155,6 +157,43 @@ const EventDetails: React.FC = () => {
         navigate(`/messages/${loggedInUserId}/${attendeeId}`);
     };
 
+    const handleJoinEvent = async () => {
+        console.log("handleJoinEvent triggered", { event_id, loggedInUserId });
+
+        if (!event_id || !loggedInUserId) {
+            console.error("Missing eventId or loggedInUserId", { event_id, loggedInUserId });
+            setError("Event ID or logged-in user ID is missing.");
+            return;
+        }
+
+        try {
+            console.log(`Making API call to: ${API_BASE_URL}/events/events/${event_id}/add_user/${loggedInUserId}`);
+            const response = await fetch(
+                `${API_BASE_URL}/events/events/${event_id}/add_user/${loggedInUserId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.ok) {
+                const newAttendee = await response.json();
+                setAttendees((prev) => [...prev, newAttendee]);
+                setUserMessage("Successfully joined the event!");
+            } else {
+                const errorData = await response.json();
+                setUserMessage(errorData.detail || "Failed to join the event.");
+            }
+        } catch (error) {
+            console.error("Error joining event:", error);
+            setError("An error occurred while joining the event.");
+        }
+    };
+
+
+
 
     const generateGoogleMapsLink = async () => {
         if (event?.latitude && event?.longitude) {
@@ -242,6 +281,12 @@ const EventDetails: React.FC = () => {
                         {event.description || "No description available."}
                     </p>
                 </div>
+                <button
+                    onClick={addUserToEvent}
+                    className="mt-4 py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                    Join Event
+                </button>
             </div>
             <div className="p-4 border border-gray-200 bg-white rounded shadow-md">
                 <h3 className="text-xl font-bold text-blue-600 mb-6">Attendees</h3>

@@ -6,6 +6,8 @@ import models
 from models import User, Event, EventAttendance
 import schemas
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
+from fastapi import HTTPException
 import requests
 from schemas import(
     EventCreateRequest,
@@ -39,14 +41,6 @@ async def get_user_events(user_id: int, session: Session = Depends(get_db)):
     return events
 
 
-# @router.get("/events/{event_id}", response_model=FullEventInformationRequest)
-# async def get_event_by_id(event_id: int, session: Session = Depends(get_db)):
-#     event = session.get(models.Event, event_id)
-#     if not event:
-#         raise HTTPException(status_code=404, detail="Event not found")
-#     return event
-
-
 @router.get("/users/{user_id}/events")
 async def get_all_events_a_single_user_is_attending(user_id: int, session: Session = Depends(get_db)):
     # Query the Event table and join with EventAttendance to get the events the user is attending
@@ -63,56 +57,6 @@ async def get_all_events_a_single_user_is_attending(user_id: int, session: Sessi
 
     return events
 
-
-# @router.get("/users/{user_id}/events", response_model=list[EventResponse])
-# async def get_all_events_a_single_user_is_attending(user_id: int, session: Session = Depends(get_db)):
-#     """
-#     Get all events a user is attending, including additional metadata like the creator's name
-#     and the number of attendees for each event.
-#     """
-#     # Query events joined with EventAttendance and User for the creator's name
-#     query = (
-#         select(
-#             Event,  # Main event data
-#             User.name.label("creator_name"),  # Event creator's name
-#             func.count(EventAttendance.user_id).label("attendee_count")  # Count of attendees
-#         )
-#         .join(EventAttendance, EventAttendance.event_id == Event.id)
-#         .join(User, Event.user_id == User.id)  # Join to get creator's name
-#         .where(EventAttendance.user_id == user_id)
-#         .group_by(Event.id, User.name)  # Group by Event and User.name for proper aggregation
-#     )
-
-#     # Execute the query and fetch results
-#     result = session.exec(query).all()
-
-#     if not result:
-#         raise HTTPException(status_code=404, detail="User is not attending any events")
-
-#     # Transform results into EventResponse schema
-#     events = [
-#         EventResponse(
-#             id=event.id,
-#             event_title=event.event_title,
-#             location=event.location,
-#             event_day=event.event_day,
-#             event_month=event.event_month,
-#             start_time=event.start_time,
-#             end_time=event.end_time,
-#             description=event.description,
-#             max_players=event.max_players,
-#             public=event.public,
-#             visible_address=None,  # Adjust based on your schema logic
-#             invite_only=None,  # Adjust based on your schema logic
-#             latitude=event.latitude,
-#             longitude=event.longitude,
-#             creator=creator_name,
-#             attendee_count=attendee_count,
-#         )
-#         for event, creator_name, attendee_count in result
-#     ]
-
-#     return events
 
 @router.get("/events/{event_id}/attendees", response_model=List[UserResponse])
 async def get_event_attendees(event_id: int, session: Session = Depends(get_db)):
@@ -138,20 +82,27 @@ async def get_single_event_details_by_id(event_id: int, session: Session = Depen
         raise HTTPException(status_code=404, detail="Event not found")
     return event  # Return the single event
 
+#     return new_event
 @router.post("/events", response_model=schemas.EventBase)
 async def create_event(
     event_data: schemas.EventBase, 
     session: Session = Depends(get_db)
 ):
-    # Create the Event instance from the Pydantic schema data
+    # Step 1: Fetch the numeric user ID directly from the frontend request
+    user_id = event_data.user_id  # Expecting a numeric `user_id` from the frontend
+
+    # Step 2: Verify that the user exists in the database
+    user = session.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found. Ensure the user is registered.")
+
+    # Step 3: Create the Event instance
     new_event = models.Event.from_orm(event_data)
     session.add(new_event)
     session.commit()
     session.refresh(new_event)  # Refresh to get the new ID from the database
-    
+
     return new_event
-
-
 
 @router.post("/events/{event_id}/add_user/{user_id}")
 async def add_user_to_event(event_id: int, user_id: int, session: Session = Depends(get_db)):
@@ -182,14 +133,6 @@ async def add_user_to_event(event_id: int, user_id: int, session: Session = Depe
     
     return {"message": "User successfully added to event"}
 
-# @router.delete("events/{event_id}")
-# async def delete_a_event_anyone_can_delete(event_id: int, session:Session = Depends(get_db)):
-#     event = session.get(models.Event, event_id)
-#     session.delete(Event)
-#     session.commit()
-#     return 
-
-
 @router.delete("/events/{event_id}")
 def delete_a_event_anyone_can_delete(event_id: int, session: Session = Depends(get_db)):
     # Fetch the event instance by its ID
@@ -204,23 +147,37 @@ def delete_a_event_anyone_can_delete(event_id: int, session: Session = Depends(g
     session.commit()
 
     return {"message": f"Event with ID {event_id} deleted successfully"}
-    
+
+def resolve_user_id(session: Session, user_identifier: str) -> int:
+    """
+    Resolve a user identifier (Auth0 ID or numeric ID) to the numeric user ID.
+    Use the email field to match users in the database.
+    """
+    # Check if the user_identifier is a string and use email to resolve the user
+    if isinstance(user_identifier, str):
+        user = session.query(models.User).filter(models.User.email == user_identifier).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user.id
+    return user_identifier  # If already numeric, return as is
+
 @router.delete("/events/{event_id}/remove_user/{user_id}")
-async def remove_user_from_event(event_id: int, user_id: int, session: Session = Depends(get_db)):
+async def remove_user_from_event(event_id: int, user_id: str, session: Session = Depends(get_db)):
+    """
+    Remove a user from an event. Supports email-based user resolution.
+    """
+    # Resolve user ID dynamically
+    numeric_user_id = resolve_user_id(session, user_id)
+
     # Check if the event exists
     event = session.get(models.Event, event_id)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
     
-    # Check if the user exists
-    user = session.get(models.User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
     # Check if the user is attending the event
     attendance_query = (
         select(models.EventAttendance)
-        .where(models.EventAttendance.user_id == user_id)
+        .where(models.EventAttendance.user_id == numeric_user_id)
         .where(models.EventAttendance.event_id == event_id)
     )
     attendance = session.exec(attendance_query).first()
@@ -232,15 +189,3 @@ async def remove_user_from_event(event_id: int, user_id: int, session: Session =
     session.commit()
     
     return {"message": "User successfully removed from event"}
-
-
-
-
-
-
-
-
-
-
-
-
