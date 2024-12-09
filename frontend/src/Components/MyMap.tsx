@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import EyeIcon from '../assets/image.png'; // Adjust the import path if needed
-import mapboxgl from 'mapbox-gl';
+// import mapboxgl from 'mapbox-gl';
 
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
