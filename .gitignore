@@ -54,3 +54,11 @@ frontend/.vite/deps_temp_*/
 
 # Logs
 *.log
+
+.DS_Store
+
+# VSCODE
+.vscode
+
+# Vim files
+*.swp
