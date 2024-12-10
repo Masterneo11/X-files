@@ -41,8 +41,8 @@ const Login: React.FC = () => {
                                 Log In
                             </button>
                         </div>
-                        <Link to="/create" className="bg-green-400 h-12 border-green text-white hover:bg-green w-full sm:w-48 mt-3 text-sm" >
-                            Create account</Link>
+                        {/* <Link to="/create" className="bg-green-400 h-12 border-green text-white hover:bg-green w-full sm:w-48 mt-3 text-sm" >
+                            Create account</Link> */}
 
 
 
