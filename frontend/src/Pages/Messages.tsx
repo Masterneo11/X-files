@@ -160,9 +160,9 @@
 // };
 
 // export default Messages;
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 // Interfaces for User and Message data
 interface User {
@@ -180,27 +180,80 @@ interface Message {
     status: string;
 }
 
-const Messages: React.FC = () => {
-    const { loggedInUserId, attendeeId } = useParams<{ loggedInUserId: string; attendeeId: string }>();
+const API_BASE_URL = "http://localhost:8000"; // Backend URL
 
+const Messages: React.FC = () => {
+    const { attendeeId } = useParams<{ attendeeId: string }>();
+    const { user, isAuthenticated } = useAuth0();
+
+    const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null); // Dynamically fetched user ID
     const [chatUser, setChatUser] = useState<User | null>(null);
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
-    const [statusUpdate, setStatusUpdate] = useState<{ id: number; status: string }>({ id: 0, status: "" });
-
-    const loggedInUserIdStr = loggedInUserId || "";
-    const attendeeIdStr = attendeeId || "";
 
     useEffect(() => {
-        if (attendeeIdStr) {
-            fetchChatUser(attendeeIdStr);
-            fetchMessages();
+        if (isAuthenticated && user?.email) {
+            checkUser(user.email).then(() => {
+                if (loggedInUserId && attendeeId) {
+                    fetchChatUser(attendeeId);
+                    fetchMessages();
+                }
+            });
         }
-    }, [attendeeIdStr]);
+    }, [isAuthenticated, user, loggedInUserId, attendeeId]);
+
+    // Check if the user exists in the database
+    const checkUser = async (email: string) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/users/by-email/${email}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setLoggedInUserId(data.id); // Set the logged-in user ID
+            } else {
+                console.log("User not found. Creating a new user.");
+                await createUser();
+            }
+        } catch (error) {
+            console.error("Error checking user:", error);
+        }
+    };
+
+    // Create a new user in the database
+    const createUser = async () => {
+        if (!user || !user.email) return;
+
+        const newUser = {
+            name: user.name || "Anonymous",
+            username: user.nickname || user.name || "Anonymous",
+            email: user.email,
+            photo: user.picture || null,
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/users/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newUser),
+            });
+
+            if (response.ok) {
+                const createdUser = await response.json();
+                setLoggedInUserId(createdUser.id); // Set the newly created user ID
+            } else {
+                console.error("Failed to create user.");
+            }
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+    };
 
     const fetchChatUser = async (userId: string) => {
         try {
-            const response = await fetch(`http://localhost:8000/profile/users/${userId}`);
+            const response = await fetch(`${API_BASE_URL}/profile/users/${userId}`);
             if (response.ok) {
                 const data = await response.json();
                 setChatUser(data);
@@ -213,8 +266,10 @@ const Messages: React.FC = () => {
     };
 
     const fetchMessages = async () => {
+        if (!loggedInUserId || !attendeeId) return;
+
         try {
-            const response = await fetch(`http://localhost:8000/Messages/messages/${loggedInUserIdStr}/${attendeeIdStr}`);
+            const response = await fetch(`${API_BASE_URL}/Messages/messages/${loggedInUserId}/${attendeeId}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
@@ -227,17 +282,17 @@ const Messages: React.FC = () => {
     };
 
     const handleSendMessage = async () => {
-        if (!message.trim()) return;
+        if (!message.trim() || !loggedInUserId || !attendeeId) return;
 
         try {
-            const response = await fetch("http://localhost:8000/messages/", {
+            const response = await fetch("http://localhost:8000/Messages/messages/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    sender_id: parseInt(loggedInUserIdStr),
-                    receiver_id: parseInt(attendeeIdStr),
+                    sender_id: loggedInUserId,
+                    receiver_id: parseInt(attendeeId),
                     content: message,
                 }),
             });
@@ -304,19 +359,18 @@ const Messages: React.FC = () => {
                     messages.map((msg) => (
                         <div
                             key={msg.id}
-                            className={`flex ${msg.sender_id === parseInt(loggedInUserIdStr) ? "justify-end" : "justify-start"
-                                }`}
+                            className={`flex ${msg.sender_id === loggedInUserId ? "justify-end" : "justify-start"}`}
                         >
                             <div className="flex items-center">
                                 <div
-                                    className={`p-2 rounded-lg shadow-md ${msg.sender_id === parseInt(loggedInUserIdStr)
+                                    className={`p-2 rounded-lg shadow-md ${msg.sender_id === loggedInUserId
                                         ? "bg-green-400 text-white"
                                         : "bg-gray-200"
                                         }`}
                                 >
                                     {msg.content}
                                 </div>
-                                {msg.sender_id === parseInt(loggedInUserIdStr) && (
+                                {msg.sender_id === loggedInUserId && (
                                     <button
                                         onClick={() => handleDeleteMessage(msg.id)}
                                         className="ml-2 text-red-500 text-sm hover:underline"
