@@ -9,16 +9,30 @@ from fastapi import FastAPI
 app = FastAPI()
 
 # CORS configuration (adjust origins as needed)
-origins = ["*"]
+origins = [
+    "https://omadagroupevents.com",  # Production frontend
+    "http://localhost:5173",        # Local development frontend
+]
 
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=["http://localhost:5173"],  # Allow your frontend URL
-    allow_origins=["*"],  # Allow your frontend URL
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# # CORS configuration (adjust origins as needed)
+# origins = ["*"]
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     # allow_origins=["http://localhost:5173"],  # Allow your frontend URL
+#     allow_origins=["*"],  # Allow your frontend URL
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 # Include your routers hi
 app.include_router(Login.router, tags=["Login"])
