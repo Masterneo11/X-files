@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const API_BASE_URL = "http://localhost:8000"; // Backend URL
 
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
 interface CreateUser {
     id?: number;
     name: string;
@@ -31,7 +33,6 @@ const CreateGame: React.FC = () => {
     const [suggestions, setSuggestions] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
     // Check if the user exists in the database
     const checkUser = async (email: string) => {
