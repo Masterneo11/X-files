@@ -5,7 +5,6 @@ import PodiumIcon from "../assets/podium-victory-leader.svg";
 import Modal from "../Components/Modal";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = "VITE_API_BASE_URL";
 
 interface Event {
     id: string;
@@ -46,7 +45,7 @@ const Home: React.FC = () => {
     // Check if the user exists in the database by email
     const checkUser = async (email: string) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/users/by-email/${email}`, {
+            const response = await fetch(`$/users/by-email/${email}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
@@ -85,7 +84,7 @@ const Home: React.FC = () => {
     // Create a new user in the database
     const createUser = async (userData: CreateUser) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/users/`, {
+            const response = await fetch(`$/users/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData),
