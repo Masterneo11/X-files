@@ -59,7 +59,6 @@ const Home: React.FC = () => {
                 setIsModalOpen(true);
             }
         } catch (error) {
-            console.error("Error checking user:", error);
             setIsModalOpen(true);
         }
     };
