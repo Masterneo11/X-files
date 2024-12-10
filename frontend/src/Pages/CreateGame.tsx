@@ -31,7 +31,7 @@ const CreateGame: React.FC = () => {
     const [suggestions, setSuggestions] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+    const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
     // Check if the user exists in the database
     const checkUser = async (email: string) => {
@@ -93,7 +93,7 @@ const CreateGame: React.FC = () => {
     const fetchGeocode = async (address: string) => {
         const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
             address
-        )}.json?access_token=${MAPBOX_ACCESS_TOKEN}`;
+        )}.json?access_token=${MAPBOX_TOKEN}`;
 
         try {
             const response = await fetch(geocodeUrl);
@@ -113,7 +113,7 @@ const CreateGame: React.FC = () => {
     const fetchSuggestions = async (query: string) => {
         const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
             query
-        )}.json?access_token=${MAPBOX_ACCESS_TOKEN}&autocomplete=true&limit=5`;
+        )}.json?access_token=${MAPBOX_TOKEN}&autocomplete=true&limit=5`;
 
         try {
             const response = await fetch(url);
