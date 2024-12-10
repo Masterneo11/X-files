@@ -12,7 +12,9 @@ app = FastAPI()
 origins = [
     "https://omadagroupevents.com",
     "https://omadagroupevents.railway.app", 
-    "http://localhost:5173",  
+    "https://localhost:5173"
+    "https:localhost:8000"
+    "https:localhost:8000/",  
 ]
 
 app.add_middleware(
