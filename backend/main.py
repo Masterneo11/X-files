@@ -14,7 +14,7 @@ origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     # allow_origins=["http://localhost:5173"],  # Allow your frontend URL
-    allow_origins=["https://omadagroupevents.com"],  # Allow your frontend URL
+    allow_origins=["*"],  # Allow your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

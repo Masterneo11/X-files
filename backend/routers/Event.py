@@ -58,21 +58,36 @@ async def get_all_events_a_single_user_is_attending(user_id: int, session: Sessi
     return events
 
 
+
 @router.get("/events/{event_id}/attendees", response_model=List[UserResponse])
 async def get_event_attendees(event_id: int, session: Session = Depends(get_db)):
-    event = session.get(models.Event, event_id)
+    event = session.get(Event, event_id)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
     query = (
-        select(models.User)
-        .join(models.EventAttendance, models.EventAttendance.user_id == models.User.id)
-        .where(models.EventAttendance.event_id == event_id)
+        select(User)
+        .join(EventAttendance, EventAttendance.user_id == User.id)
+        .where(EventAttendance.event_id == event_id)
     )
     attendees = session.exec(query).all()
-    
-    # Convert to Pydantic models if needed
+
     return [UserResponse.from_orm(user) for user in attendees]
+# @router.get("/events/{event_id}/attendees", response_model=List[UserResponse])
+# async def get_event_attendees(event_id: int, session: Session = Depends(get_db)):
+#     event = session.get(models.Event, event_id)
+#     if not event:
+#         raise HTTPException(status_code=404, detail="Event not found")
+
+#     query = (
+#         select(models.User)
+#         .join(models.EventAttendance, models.EventAttendance.user_id == models.User.id)
+#         .where(models.EventAttendance.event_id == event_id)
+#     )
+#     attendees = session.exec(query).all()
+    
+#     # Convert to Pydantic models if needed
+#     return [UserResponse.from_orm(user) for user in attendees]
 
 
 @router.get("/events/{event_id}", response_model=FullEventInformationRequest)
