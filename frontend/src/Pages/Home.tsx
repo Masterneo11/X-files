@@ -45,7 +45,7 @@ const Home: React.FC = () => {
     // Check if the user exists in the database by email
     const checkUser = async (email: string) => {
         try {
-            const response = await fetch(`$/users/by-email/${email}`, {
+            const response = await fetch(`/users/by-email/${email}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
@@ -67,7 +67,7 @@ const Home: React.FC = () => {
         try {
             // const response = await fetch(`http://localhost:8000/events/users/1/events`, {
 
-            const response = await fetch(`${API_BASE_URL}/events/users/${userId}/events`, {
+            const response = await fetch(`/events/users/${userId}/events`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
@@ -84,7 +84,7 @@ const Home: React.FC = () => {
     // Create a new user in the database
     const createUser = async (userData: CreateUser) => {
         try {
-            const response = await fetch(`$/users/`, {
+            const response = await fetch(`/users/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData),
