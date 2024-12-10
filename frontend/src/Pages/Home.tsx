@@ -84,7 +84,7 @@ const Home: React.FC = () => {
     // Create a new user in the database
     const createUser = async (userData: CreateUser) => {
         try {
-            const response = await fetch(`/users/`, {
+            const response = await fetch(`/users`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData),
