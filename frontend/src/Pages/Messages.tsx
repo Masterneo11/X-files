@@ -301,11 +301,40 @@ const Messages: React.FC = () => {
                 const newMessage = await response.json();
                 setMessages((prev) => [...prev, newMessage]);
                 setMessage("");
+            } else {
+                console.error("Failed to send message:", await response.json());
             }
         } catch (error) {
             console.error("Error sending message:", error);
         }
     };
+
+
+    // const handleSendMessage = async () => {
+    //     if (!message.trim() || !loggedInUserId || !attendeeId) return;
+
+    //     try {
+    //         const response = await fetch("http://localhost:8000/Messages/messages/", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 sender_id: loggedInUserId,
+    //                 receiver_id: parseInt(attendeeId),
+    //                 content: message,
+    //             }),
+    //         });
+
+    //         if (response.ok) {
+    //             const newMessage = await response.json();
+    //             setMessages((prev) => [...prev, newMessage]);
+    //             setMessage("");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error sending message:", error);
+    //     }
+    // };
 
     const handleUpdateMessageStatus = async (id: number, status: string) => {
         try {

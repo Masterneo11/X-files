@@ -8,32 +8,59 @@ import schemas
 
 router = APIRouter()
 
+
+
+
+
 @router.post("/messages/", response_model=schemas.MessageResponse)
 async def send_message(
-    sender_id: int, 
-    receiver_id: int, 
-    content: str, 
+    message: CreateMessageRequest,  # Extract request body
     session: Session = Depends(get_db)
 ):
     # Check if the receiver exists
-    receiver = session.query(models.User).filter(models.User.id == receiver_id).first()
+    receiver = session.query(models.User).filter(models.User.id == message.receiver_id).first()
     if not receiver:
         raise HTTPException(status_code=404, detail="Receiver not found")
 
     # Create the message
-    message = models.Messages(
-        sender_id=sender_id,
-        receiver_id=receiver_id,
-        content=content,
-        timestamp=datetime.utcnow().isoformat(),  # Add a timestamp
-        status="sent"
+    new_message = Messages(
+        sender_id=message.sender_id,
+        receiver_id=message.receiver_id,
+        content=message.content,
+        timestamp=datetime.utcnow().isoformat(),
+        status="sent",
     )
-
-    session.add(message)
+    session.add(new_message)
     session.commit()
-    session.refresh(message)
+    session.refresh(new_message)
 
-    return message
+    return new_message
+# @router.post("/messages/", response_model=schemas.MessageResponse)
+# async def send_message(
+#     sender_id: int, 
+#     receiver_id: int, 
+#     content: str, 
+#     session: Session = Depends(get_db)
+# ):
+#     # Check if the receiver exists
+#     receiver = session.query(models.User).filter(models.User.id == receiver_id).first()
+#     if not receiver:
+#         raise HTTPException(status_code=404, detail="Receiver not found")
+
+#     # Create the message
+#     message = models.Messages(
+#         sender_id=sender_id,
+#         receiver_id=receiver_id,
+#         content=content,
+#         timestamp=datetime.utcnow().isoformat(),  # Add a timestamp
+#         status="sent"
+#     )
+
+#     session.add(message)
+#     session.commit()
+#     session.refresh(message)
+
+#     return message
 
 
 
@@ -77,7 +104,6 @@ async def update_message_status(
     session.refresh(message)
 
     return message
-
 
 @router.delete("/messages/{message_id}", status_code=204)
 async def delete_message(message_id: int, session: Session = Depends(get_db)):

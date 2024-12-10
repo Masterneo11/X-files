@@ -28,6 +28,10 @@ class EventOverviewResponse(BaseModel):
     longitutde: float
     latitude: float
 
+class CreateMessageRequest(BaseModel):
+    sender_id: int
+    receiver_id: int
+    content: str
 
 class EventBase(BaseModel):
     event_title: str
