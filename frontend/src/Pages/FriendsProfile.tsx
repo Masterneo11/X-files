@@ -133,10 +133,6 @@ const FriendsProfile: React.FC = () => {
                 body: JSON.stringify(payload),
             });
 
-            if (!response.ok) {
-                const errorDetails = await response.json();
-                throw new Error(errorDetails.detail || "Failed to send friend request.");
-            }
 
             setIsRequestSent(true);
             setFriendRequestStatus("Friend request sent successfully!");
