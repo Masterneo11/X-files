@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import MaskedInput from "react-text-mask";
 import "react-datepicker/dist/react-datepicker.css";
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = "http://localhost:8000";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 

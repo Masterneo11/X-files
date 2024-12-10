@@ -5,7 +5,7 @@ import PodiumIcon from "../assets/podium-victory-leader.svg";
 import Modal from "../Components/Modal";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = "VITE_API_BASE_URL";
 
 interface Event {
     id: string;
@@ -183,45 +183,6 @@ const Home: React.FC = () => {
                     ))}
                 </div>
 
-                {/*         
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl ">
-                    {events.map((event, index) => (
-                        <div
-                            key={index}
-                            className="p-4 bg-white border-2 border-gray-600 shadow-md rounded-lg flex flex-col justify-between"
-                        >
-                    
-                            <div className="flex items-center mb-2">
-                                <img className="h-5 w-5 z-10" src={DiceIcon} alt="dice" />
-                                <div className="text-green-700 ml-5 text-lg font-medium">{event.event_title}</div>
-                            </div>
-
-                            
-                            <p className="text-sm text-gray-600">{event.month}</p>
-                            <div className="flex justify-between items-center mt-2">
-                                <div className="flex items-center space-x-4">
-                                    <img className="h-5 w-5" src={PodiumIcon} alt="podium" />
-                                    <div>
-                                        {Object.entries(event.creator || {})
-                                            .filter(([key]) => key === "username") // Filter for only the 'username' key
-                                            .map(([_, value]) => (
-                                                <div key="username">{value}</div> // Render the username value
-                                            ))}
-                                    </div>
-                                    <div className="text-sm">{event.start_time}</div>
-                                    <div className="text-sm">{event.end_time}</div>
-                                </div>
-                                
-                                <button
-                                    onClick={() => navigate(`/fullgameinfo/${event.id}`)}
-                                    className="py-1 px-4 bg-green-600 text-white rounded hover:bg-green-700"
-                                >
-                                    Info
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div> */}
             </div>
 
             {isModalOpen && (
