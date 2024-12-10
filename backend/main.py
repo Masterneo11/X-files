@@ -10,8 +10,9 @@ app = FastAPI()
 
 # CORS configuration (adjust origins as needed)
 origins = [
-    "https://omadagroupevents.com",  # Production frontend
-    "http://localhost:5173",        # Local development frontend
+    "https://omadagroupevents.com",
+    "https://omadagroupevents.railway.app", 
+    "http://localhost:5173",  
 ]
 
 app.add_middleware(
