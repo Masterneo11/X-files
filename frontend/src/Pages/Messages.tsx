@@ -214,7 +214,7 @@ const Messages: React.FC = () => {
 
     const fetchMessages = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/messages/${loggedInUserIdStr}/${attendeeIdStr}`);
+            const response = await fetch(`http://localhost:8000/Messages/messages/${loggedInUserIdStr}/${attendeeIdStr}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
@@ -254,7 +254,7 @@ const Messages: React.FC = () => {
 
     const handleUpdateMessageStatus = async (id: number, status: string) => {
         try {
-            const response = await fetch(`http://localhost:8000/messages/${id}`, {
+            const response = await fetch(`http://localhost:8000/Messages/messages/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -275,7 +275,7 @@ const Messages: React.FC = () => {
 
     const handleDeleteMessage = async (id: number) => {
         try {
-            const response = await fetch(`http://localhost:8000/messages/${id}`, {
+            const response = await fetch(`http://localhost:8000/Messages/messages/${id}`, {
                 method: "DELETE",
             });
 
