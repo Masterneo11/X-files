@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import EyeIcon from '../assets/image.png'; // Adjust the import path if needed
-// import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
@@ -39,7 +39,7 @@ const MyMap: React.FC<MyMapProps> = ({ latitude, longitude, points }) => {
                 zoom: 12,
             }}
             style={{ width: '100%', height: '1000px' }}
-            mapStyle="mapbox://styles/dopeneo/cm34pc8l6002b01ptes95ck1k"
+            mapStyle="mapbox://styles/mapbox/streets-v11"
             // mapbox://styles/dopeneo/cm34pc8l6002b01ptes95ck1k    // mapStyle="mapbox://styles/mapbox/streets-v11"
 
             mapboxAccessToken={MAPBOX_TOKEN}
