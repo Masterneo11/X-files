@@ -152,8 +152,6 @@ const CreateGame: React.FC = () => {
             return;
         }
 
-
-
         if (!eventTitle || !location || !eventDay || !eventMonth || !startTime || !endTime) {
             alert("Please fill in all required fields.");
             return;
@@ -226,10 +224,12 @@ const CreateGame: React.FC = () => {
                             className="mt-1 p-2 w-full border-2 border-gray-600 rounded-md"
                         />
                     </div>
-
-
                     <div className="col-span-2 relative mt-3">
                         <label className="block text-sm font-medium text-gray-700">Location</label>
+                        <div className="text-sm text-gray-500 mb-2">
+                            Currently, private addresses are not supported in this version. All
+                            locations will be visible to everyone. Please select a public location. Thank you!
+                        </div>
                         <input
                             type="text"
                             value={location}

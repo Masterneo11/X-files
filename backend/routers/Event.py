@@ -73,6 +73,7 @@ async def get_event_attendees(event_id: int, session: Session = Depends(get_db))
     attendees = session.exec(query).all()
 
     return [UserResponse.from_orm(user) for user in attendees]
+    
 # @router.get("/events/{event_id}/attendees", response_model=List[UserResponse])
 # async def get_event_attendees(event_id: int, session: Session = Depends(get_db)):
 #     event = session.get(models.Event, event_id)

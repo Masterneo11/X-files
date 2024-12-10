@@ -52,6 +52,9 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        orm_mode = True
+
+
 
 
 # class UserResponse(BaseModel):
@@ -245,6 +248,8 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True
+        from_attributes = True  # Enables ORM to Pydantic conversion
+
 
 
 class FriendRequest(BaseModel):

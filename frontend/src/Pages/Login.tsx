@@ -27,8 +27,12 @@ const Login: React.FC = () => {
                     <div className="basis-6 text-center px-4 sm:px-0 flex flex-col">
 
                         <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 flex justify-start self-start" >
-                            Welcome to Omada Gaming Center
+                            Welcome to Omada Group Events
                         </div>
+                        <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 flex justify-start self-start" >
+                            Primarily made to help you find local board game events and video game events in your area
+                        </div>
+
                         <div className="h-14 w-full sm:w-48 flex items-center justify-center bg-blue-500 rounded-md mb-4">
                             <button
                                 onClick={() => loginWithRedirect()}
