@@ -29,7 +29,7 @@ const Login: React.FC = () => {
                         <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 flex justify-start self-start" >
                             Welcome to Omada Group Events
                         </div>
-                        <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 flex justify-start self-start" >
+                        <div className="text-sm text-gray-500 sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 flex justify-start self-start" >
                             Primarily made to help you find local board game events and video game events in your area
                         </div>
 

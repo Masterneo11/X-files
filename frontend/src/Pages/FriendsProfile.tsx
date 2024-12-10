@@ -110,6 +110,7 @@ const FriendsProfile: React.FC = () => {
         fetchFriends();
     }, [isAuthenticated, user, id]);
 
+
     const sendFriendRequest = async (targetUserId: number) => {
         if (!currentUserId || currentUserId === targetUserId) {
             console.error("Invalid request: Cannot send a friend request to yourself.");
@@ -117,9 +118,10 @@ const FriendsProfile: React.FC = () => {
             return;
         }
 
+        // Ensure both user IDs are numbers
         const payload: FriendRequest = {
-            user_id_1: currentUserId,
-            user_id_2: targetUserId,
+            user_id_1: Number(currentUserId),
+            user_id_2: Number(targetUserId),
         };
 
         try {
@@ -142,6 +144,39 @@ const FriendsProfile: React.FC = () => {
             setFriendRequestError(error.message);
         }
     };
+
+    // const sendFriendRequest = async (targetUserId: number) => {
+    //     if (!currentUserId || currentUserId === targetUserId) {
+    //         console.error("Invalid request: Cannot send a friend request to yourself.");
+    //         setFriendRequestError("Cannot send a friend request to yourself.");
+    //         return;
+    //     }
+
+    //     const payload: FriendRequest = {
+    //         user_id_1: currentUserId,
+    //         user_id_2: targetUserId,
+    //     };
+
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/Friends/friends/request`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(payload),
+    //         });
+
+    //         if (!response.ok) {
+    //             const errorDetails = await response.json();
+    //             throw new Error(errorDetails.detail || "Failed to send friend request.");
+    //         }
+
+    //         setIsRequestSent(true);
+    //         setFriendRequestStatus("Friend request sent successfully!");
+    //     } catch (error: any) {
+    //         setFriendRequestError(error.message);
+    //     }
+    // };
 
     if (error) {
         return <p className="text-red-500 text-center">{error}</p>;
