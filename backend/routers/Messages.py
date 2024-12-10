@@ -5,6 +5,7 @@ from database import get_db
 from models import Messages
 import models
 import schemas
+from schemas import CreateMessageRequest
 
 router = APIRouter()
 
