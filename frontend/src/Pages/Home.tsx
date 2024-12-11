@@ -5,7 +5,7 @@ import PodiumIcon from "../assets/podium-victory-leader.svg";
 import Modal from "../Components/Modal";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = "https:backend:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 interface Event {
     id: string;
