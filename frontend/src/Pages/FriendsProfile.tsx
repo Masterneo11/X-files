@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import basicphoto from "../assets/avatar.png";
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 interface FriendRequest {
     user_id_1: number;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import basicphoto from "../assets/avatar.png"; // Default avatar image
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const FindFriends: React.FC = () => {
     const [friends, setFriends] = useState<any[]>([]);

@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 import basicphoto from "../assets/avatar.png";
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Interfaces for expected API responses
 interface UserResponse {
