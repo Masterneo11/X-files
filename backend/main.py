@@ -9,12 +9,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 # CORS configuration (adjust origins as needed)
-origins = [
-    "https://omadagroupevents.com",
-    "https://omadagroupevents.railway.app", 
-    "https://localhost:5173"
-    "https:localhost:8000"
-    "https:localhost:8000/",  
+origins = ["*" 
 ]
 
 app.add_middleware(
