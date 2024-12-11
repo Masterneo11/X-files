@@ -6,6 +6,8 @@ interface ClubData {
     description: string;
     private: boolean;
 }
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 
 const ClubsCreate: React.FC = () => {
     // Form state
@@ -38,7 +40,7 @@ const ClubsCreate: React.FC = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:8000/Clubs/clubs", {
+            const response = await fetch(`${API_BASE_URL}/Clubs/clubs`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

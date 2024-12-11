@@ -24,6 +24,7 @@ interface Attendee {
     email: string;
     username: string;
 }
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const FullGameInfo: React.FC = () => {
     const { event_id } = useParams<{ event_id: string }>();
@@ -42,11 +43,11 @@ const FullGameInfo: React.FC = () => {
             setLoading(true);
 
             const [eventResponse, attendeesResponse] = await Promise.all([
-                fetch(`http://localhost:8000/events/events/${eventId}`, {
+                fetch(`${API_BASE_URL}/events/events/${eventId}`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 }),
-                fetch(`http://localhost:8000/events/events/${eventId}/attendees`, {
+                fetch(`${API_BASE_URL}/events/events/${eventId}/attendees`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 }),
@@ -70,7 +71,7 @@ const FullGameInfo: React.FC = () => {
     };
     const fetchDatabaseUserId = async (auth0Sub: string) => {
         try {
-            const response = await fetch(`http://localhost:8000/users/get_user_id?sub=${auth0Sub}`, {
+            const response = await fetch(`${API_BASE_URL}/users/get_user_id?sub=${auth0Sub}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -100,7 +101,7 @@ const FullGameInfo: React.FC = () => {
         try {
             // Use email as user ID
             const response = await fetch(
-                `http://localhost:8000/events/events/${event_id}/remove_user/${user.email}`,
+                `${API_BASE_URL}/events/events/${event_id}/remove_user/${user.email}`,
                 {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },

@@ -180,7 +180,7 @@ interface Message {
     status: string;
 }
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const Messages: React.FC = () => {
     const { attendeeId } = useParams<{ attendeeId: string }>();
@@ -285,7 +285,7 @@ const Messages: React.FC = () => {
         if (!message.trim() || !loggedInUserId || !attendeeId) return;
 
         try {
-            const response = await fetch("http://localhost:8000/Messages/messages/", {
+            const response = await fetch(`${API_BASE_URL}/Messages/messages/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -309,36 +309,9 @@ const Messages: React.FC = () => {
         }
     };
 
-
-    // const handleSendMessage = async () => {
-    //     if (!message.trim() || !loggedInUserId || !attendeeId) return;
-
-    //     try {
-    //         const response = await fetch("http://localhost:8000/Messages/messages/", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 sender_id: loggedInUserId,
-    //                 receiver_id: parseInt(attendeeId),
-    //                 content: message,
-    //             }),
-    //         });
-
-    //         if (response.ok) {
-    //             const newMessage = await response.json();
-    //             setMessages((prev) => [...prev, newMessage]);
-    //             setMessage("");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error sending message:", error);
-    //     }
-    // };
-
     const handleUpdateMessageStatus = async (id: number, status: string) => {
         try {
-            const response = await fetch(`http://localhost:8000/Messages/messages/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/Messages/messages/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -359,7 +332,7 @@ const Messages: React.FC = () => {
 
     const handleDeleteMessage = async (id: number) => {
         try {
-            const response = await fetch(`http://localhost:8000/Messages/messages/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/Messages/messages/${id}`, {
                 method: "DELETE",
             });
 

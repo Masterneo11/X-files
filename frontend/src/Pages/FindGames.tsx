@@ -2,13 +2,13 @@ import Map, { Marker } from 'react-map-gl';
 import React, { useState, useEffect } from 'react';
 import MyMap from '../Components/MyMap'; // Import the MyMap component
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 interface Event {
     latitude: number;
     longitude: number;
     name: string;
-    id: string; // Add this
-
-
+    id: string;
 }
 
 const FindGames: React.FC = () => {
@@ -21,7 +21,7 @@ const FindGames: React.FC = () => {
     useEffect(() => {
         const fetchEventData = async () => {
             try {
-                const response = await fetch("http://localhost:8000/events/Event");
+                const response = await fetch(`${API_BASE_URL}/events/Event`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data: Event[] = await response.json();
                 setData(data)
