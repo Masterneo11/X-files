@@ -97,7 +97,7 @@ function App() {
           path="/clubs"
           element={isAuthenticated ? <Clubs /> : <Navigate to="/login" />}
         />
-        <Route path="/fullgameinfo/:event_id" element={<FullGameInfo />} />
+        {/* <Route path="/fullgameinfo/:event_id" element={<FullGameInfo />} /> */}
         <Route
           path="findfriends"
           element={isAuthenticated ? <FindFriends /> : <Navigate to="/profile" />} />
@@ -110,7 +110,9 @@ function App() {
         <Route
           path="fullgameinfo"
           element={isAuthenticated ? <Messages /> : <Navigate to="login" />} />
-        <Route path="/fullgameinfo/:eventId" element={<FullGameInfo />} />
+
+        <Route path="/fullgameinfo/:eventId"
+          element={isAuthenticated ? <FullGameInfo /> : <Navigate to="login" />} />
 
         <Route
           path="clubscreate"
@@ -119,14 +121,18 @@ function App() {
           path="messages"
           element={isAuthenticated ? <Messages /> : <Navigate to="login" />} />
 
-        <Route path="/messages/:loggedInUserId/:attendeeId" element={<Messages />} />
+        <Route path="/messages/:loggedInUserId/:attendeeId"
+          element={isAuthenticated ? <Messages /> : <Navigate to="login" />} />
+
         <Route
           path="/findgames/:eventId/prejoingame"
-          element={isAuthenticated ? <PreJoinGame /> : <Navigate to="/login" />}
-        />
+          element={isAuthenticated ? <PreJoinGame /> : <Navigate to="/login" />} />
         <Route path="/prejoingame/:id" element={<PreJoinGame />} />
-        <Route path="/event/:id" element={<EventDetails />} />
-        <Route path="/users/:id" element={<FriendsProfile />} /> {/* This route handles /users/1 */}
+        <Route path="/event/:id"
+          element={isAuthenticated ? <EventDetails /> : <Navigate to="/login" />} />
+
+        <Route path="/users/:id"
+          element={isAuthenticated ? <FriendsProfile /> : <Navigate to="/login" />} />
 
 
 
