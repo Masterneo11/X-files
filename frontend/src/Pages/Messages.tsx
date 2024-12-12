@@ -186,7 +186,7 @@ const Messages: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-3/5 bg-gray-100">
             {/* Chat header */}
             <div className="flex items-center justify-between bg-green-400 text-white px-4 py-3 shadow-md">
                 <h2 className="text-lg font-bold">
@@ -219,12 +219,12 @@ const Messages: React.FC = () => {
                                         Delete
                                     </button>
                                 )}
-                                <button
+                                {/* <button
                                     onClick={() => handleUpdateMessageStatus(msg.id, "read")}
                                     className="ml-2 text-blue-500 text-sm hover:underline"
                                 >
                                     Mark as Read
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     ))
