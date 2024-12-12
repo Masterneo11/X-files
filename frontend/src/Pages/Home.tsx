@@ -141,7 +141,7 @@ const Home: React.FC = () => {
                         <p className="text-gray-600 text-lg text-center mb-4">
                             Hey there, it appears you aren't going to any games yet. Go to the{" "}
                             <span
-                                onClick={() => navigate("/findgames")}
+                                onClick={() => navigate("/findgame")}
                                 className="text-green-600 cursor-pointer hover:underline"
                             >
                                 find games
