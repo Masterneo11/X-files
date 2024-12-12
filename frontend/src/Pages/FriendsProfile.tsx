@@ -294,7 +294,7 @@ const FriendsProfile: React.FC = () => {
 
     const fetchFriends = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/profile/users/${id}/friends`);
+            const response = await fetch(`${API_BASE_URL}/Friends/friends/${id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch user's friends");
             }
