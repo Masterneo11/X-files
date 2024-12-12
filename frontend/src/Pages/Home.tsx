@@ -135,6 +135,78 @@ const Home: React.FC = () => {
                     <p>Loading user data...</p>
                 )}
 
+                {/* Conditional Rendering for No Events */}
+                {events.length === 0 ? (
+                    <div className="flex flex-col items-center mt-6">
+                        <p className="text-gray-600 text-lg text-center mb-4">
+                            Hey there, it appears you aren't going to any games yet. Go to the{" "}
+                            <span
+                                onClick={() => navigate("/findgames")}
+                                className="text-green-600 cursor-pointer hover:underline"
+                            >
+                                find games
+                            </span>{" "}
+                            tab!
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-4 w-full max-w-7xl mx-auto">
+                        {events.map((event, index) => (
+                            <div
+                                key={index}
+                                className="p-6 bg-white border border-gray-200 shadow-lg rounded-xl flex flex-col justify-between transition-transform transform hover:scale-105"
+                            >
+                                {/* Title and Icon */}
+                                <div className="flex items-center mb-4">
+                                    <img className="h-6 w-6" src={DiceIcon} alt="dice" />
+                                    <h3 className="text-lg text-gray-800 font-semibold ml-3">{event.event_title}</h3>
+                                </div>
+
+                                {/* Event Details */}
+                                <div className="mb-4">
+                                    <p className="text-sm text-gray-500">Month: {event.event_month}{event.event_day}</p>
+                                    <p className="text-sm text-gray-500 mt-1">Start Time: {event.start_time}</p>
+                                    <p className="text-sm text-gray-500 mt-1">End Time: {event.end_time}</p>
+                                </div>
+
+                                {/* Creator Details */}
+                                <div className="flex items-center space-x-4 mt-4">
+                                    <img className="h-6 w-6 rounded-full" src={PodiumIcon} alt="podium" />
+                                    <div className="text-sm text-gray-700">
+                                        {Object.entries(event.creator || {})
+                                            .filter(([key]) => key === "username")
+                                            .map(([_, value]) => (
+                                                <span key="username" className="font-medium">{value}</span>
+                                            ))}
+                                    </div>
+                                </div>
+
+                                {/* Button */}
+                                <div className="mt-6 flex justify-end">
+                                    <button
+                                        onClick={() => navigate(`/fullgameinfo/${event.id}`)}
+                                        className="py-2 px-6 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
+                                    >
+                                        Info
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* <div className="container w-full mt-6 flex flex-col items-center vw-90">
+                <h1 className="text-xl font-bold mb-4">Home</h1>
+
+                {userInfo ? (
+                    <div className="user-info mb-4">
+                        <p>Welcome {userInfo.username}</p>
+                    </div>
+                ) : (
+                    <p>Loading user data...</p>
+                )}
+
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-4 w-full max-w-7xl mx-auto">
                     {events.map((event, index) => (
@@ -142,20 +214,16 @@ const Home: React.FC = () => {
                             key={index}
                             className="p-6 bg-white border border-gray-200 shadow-lg rounded-xl flex flex-col justify-between transition-transform transform hover:scale-105"
                         >
-                            {/* Title and Icon */}
+                            {/* Title and Icon 
                             <div className="flex items-center mb-4">
                                 <img className="h-6 w-6" src={DiceIcon} alt="dice" />
                                 <h3 className="text-lg text-gray-800 font-semibold ml-3">{event.event_title}</h3>
                             </div>
-
-                            {/* Event Details */}
                             <div className="mb-4">
                                 <p className="text-sm text-gray-500">Month: {event.event_month}{event.event_day}</p>
                                 <p className="text-sm text-gray-500 mt-1">Start Time: {event.start_time}</p>
                                 <p className="text-sm text-gray-500 mt-1">End Time: {event.end_time}</p>
                             </div>
-
-                            {/* Creator Details */}
                             <div className="flex items-center space-x-4 mt-4">
                                 <img className="h-6 w-6 rounded-full" src={PodiumIcon} alt="podium" />
                                 <div className="text-sm text-gray-700">
@@ -167,7 +235,7 @@ const Home: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Button */}
+                            
                             <div className="mt-6 flex justify-end">
                                 <button
                                     onClick={() => navigate(`/fullgameinfo/${event.id}`)}
@@ -180,7 +248,7 @@ const Home: React.FC = () => {
                     ))}
                 </div>
 
-            </div>
+            </div> */}
 
             {isModalOpen && (
                 <Modal onSubmit={handleModalSubmit} onClose={() => setIsModalOpen(false)} />

@@ -193,33 +193,7 @@ const EventDetails: React.FC = () => {
     };
 
 
-    const generateMapboxLink = async () => {
-        if (event?.latitude && event?.longitude) {
-            return new Promise<string>((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject("Geolocation is not supported by this browser.");
-                }
-
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const userLatitude = position.coords.latitude;
-                        const userLongitude = position.coords.longitude;
-                        const mapboxLink = `https://www.mapbox.com/directions/?origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
-                        resolve(mapboxLink);
-                    },
-                    (error) => {
-                        console.error("Error getting user location:", error);
-                        reject("Unable to retrieve your location.");
-                    }
-                );
-            });
-        } else {
-            return `https://www.mapbox.com/directions/?destination=${encodeURIComponent(event?.location || "")}`;
-        }
-    };
-
-
-    // const generateGoogleMapsLink = async () => {
+    // const generateMapboxLink = async () => {
     //     if (event?.latitude && event?.longitude) {
     //         return new Promise<string>((resolve, reject) => {
     //             if (!navigator.geolocation) {
@@ -230,8 +204,8 @@ const EventDetails: React.FC = () => {
     //                 (position) => {
     //                     const userLatitude = position.coords.latitude;
     //                     const userLongitude = position.coords.longitude;
-    //                     const googleMapsLink = `https://www.google.com/maps/dir/?api=1&origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
-    //                     resolve(googleMapsLink);
+    //                     const mapboxLink = `https://www.mapbox.com/directions/?origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
+    //                     resolve(mapboxLink);
     //                 },
     //                 (error) => {
     //                     console.error("Error getting user location:", error);
@@ -240,9 +214,35 @@ const EventDetails: React.FC = () => {
     //             );
     //         });
     //     } else {
-    //         return `https://www.google.com/maps/search/?q=${encodeURIComponent(event?.location || "")}`;
+    //         return `https://www.mapbox.com/directions/?destination=${encodeURIComponent(event?.location || "")}`;
     //     }
     // };
+
+
+    const generateGoogleMapsLink = async () => {
+        if (event?.latitude && event?.longitude) {
+            return new Promise<string>((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject("Geolocation is not supported by this browser.");
+                }
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLatitude = position.coords.latitude;
+                        const userLongitude = position.coords.longitude;
+                        const googleMapsLink = `https://www.google.com/maps/dir/?api=1&origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
+                        resolve(googleMapsLink);
+                    },
+                    (error) => {
+                        console.error("Error getting user location:", error);
+                        reject("Unable to retrieve your location.");
+                    }
+                );
+            });
+        } else {
+            return `https://www.google.com/maps/search/?q=${encodeURIComponent(event?.location || "")}`;
+        }
+    };
 
     if (loading) {
         return <div>Loading event details...</div>;
@@ -268,7 +268,7 @@ const EventDetails: React.FC = () => {
                 <div className="flex flex-wrap gap-6 mb-6">
                     <div className="flex flex-col">
                         <strong className="text-gray-600">Location:</strong>
-                        <button
+                        {/* <button
                             onClick={async () => {
                                 try {
                                     const mapboxLink = await generateMapboxLink();
@@ -280,9 +280,9 @@ const EventDetails: React.FC = () => {
                             className="text-blue-600 underline hover:text-blue-800"
                         >
                             {event.location}
-                        </button>
+                        </button> */}
 
-                        {/* <button
+                        <button
                             onClick={async () => {
                                 try {
                                     const googleMapsLink = await generateGoogleMapsLink();
@@ -294,7 +294,7 @@ const EventDetails: React.FC = () => {
                             className="text-blue-600 underline hover:text-blue-800"
                         >
                             {event.location}
-                        </button> */}
+                        </button>
                     </div>
                     <div className="flex flex-col">
                         <strong className="text-gray-600">Start Time:</strong>
@@ -305,11 +305,11 @@ const EventDetails: React.FC = () => {
                         <span>{event.end_time}</span>
                     </div>
                     <div className="flex flex-col">
-                        <strong className="text-gray-600"></strong>
+                        <strong className="text-gray-600"> Day: </strong>
                         <span>{event.event_day}</span>
                     </div>
                     <div className="flex flex-col">
-                        <strong className="text-gray-600"></strong>
+                        <strong className="text-gray-600"> Month: </strong>
                         <span>{event.event_month}</span>
                     </div>
                 </div>

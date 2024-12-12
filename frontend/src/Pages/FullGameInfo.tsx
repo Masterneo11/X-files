@@ -137,24 +137,24 @@ const FullGameInfo: React.FC = () => {
         navigate(`/messages/${userId}/${attendeeId}`);
     };
 
-    // Generate Mapbox navigation link
-    const generateMapboxLink = async () => {
-        const accessToken = MAPBOX_TOKEN; // Replace with your Mapbox access token
-        if (event?.latitude && event?.longitude) {
-            return `https://www.mapbox.com/directions/?api=1&waypoints=${event.latitude},${event.longitude}&access_token=${accessToken}`;
-        } else {
-            return `https://www.mapbox.com/search/?q=${encodeURIComponent(event?.location || "")}&access_token=${accessToken}`;
-        }
-    };
-
-    // Generate Google Maps link
-    // const generateGoogleMapsLink = async () => {
+    // // Generate Mapbox navigation link
+    // const generateMapboxLink = async () => {
+    //     const accessToken = MAPBOX_TOKEN; // Replace with your Mapbox access token
     //     if (event?.latitude && event?.longitude) {
-    //         return `https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}`;
+    //         return `https://www.mapbox.com/directions/?api=1&waypoints=${event.latitude},${event.longitude}&access_token=${accessToken}`;
     //     } else {
-    //         return `https://www.google.com/maps/search/?q=${encodeURIComponent(event?.location || "")}`;
+    //         return `https://www.mapbox.com/search/?q=${encodeURIComponent(event?.location || "")}&access_token=${accessToken}`;
     //     }
     // };
+
+    // Generate Google Maps link
+    const generateGoogleMapsLink = async () => {
+        if (event?.latitude && event?.longitude) {
+            return `https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}`;
+        } else {
+            return `https://www.google.com/maps/search/?q=${encodeURIComponent(event?.location || "")}`;
+        }
+    };
     const handleProfileClick = (attendeeId: number) => {
         navigate(`/users/${attendeeId}`);
     };
@@ -189,7 +189,7 @@ const FullGameInfo: React.FC = () => {
                 <div className="flex flex-wrap gap-6 mb-6">
                     <div className="flex flex-col">
                         <strong className="text-gray-600">Location:</strong>
-                        <button
+                        {/* <button
                             onClick={async () => {
                                 const link = await generateMapboxLink();
                                 window.open(link, "_blank");
@@ -197,9 +197,9 @@ const FullGameInfo: React.FC = () => {
                             className="text-blue-600 underline hover:text-blue-800"
                         >
                             {event.location}
-                        </button>
+                        </button> */}
 
-                        {/* <button
+                        <button
                             onClick={async () => {
                                 const link = await generateGoogleMapsLink();
                                 window.open(link, "_blank");
@@ -207,7 +207,7 @@ const FullGameInfo: React.FC = () => {
                             className="text-blue-600 underline hover:text-blue-800"
                         >
                             {event.location}
-                        </button> */}
+                        </button>
                     </div>
                     <div className="flex flex-col">
                         <strong className="text-gray-600">Start Time:</strong>
