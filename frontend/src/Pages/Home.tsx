@@ -19,8 +19,10 @@ interface Event {
     event_owner: string;
     latitude: number;
     longitude: number;
-    month: string;
+    event_month: string;
+    event_day: string;
     creator: string;
+
 }
 
 interface CreateUser {
@@ -148,7 +150,8 @@ const Home: React.FC = () => {
 
                             {/* Event Details */}
                             <div className="mb-4">
-                                <p className="text-sm text-gray-500">Month: {event.month}</p>
+                                <p className="text-sm text-gray-500">Month: {event.event_month}</p>
+                                <p className="text-sm text-gray-500">Day: {event.event_day}</p>
                                 <p className="text-sm text-gray-500 mt-1">Start Time: {event.start_time}</p>
                                 <p className="text-sm text-gray-500 mt-1">End Time: {event.end_time}</p>
                             </div>
