@@ -193,9 +193,7 @@ const EventDetails: React.FC = () => {
     };
 
 
-
-
-    const generateGoogleMapsLink = async () => {
+    const generateMapboxLink = async () => {
         if (event?.latitude && event?.longitude) {
             return new Promise<string>((resolve, reject) => {
                 if (!navigator.geolocation) {
@@ -206,8 +204,8 @@ const EventDetails: React.FC = () => {
                     (position) => {
                         const userLatitude = position.coords.latitude;
                         const userLongitude = position.coords.longitude;
-                        const googleMapsLink = `https://www.google.com/maps/dir/?api=1&origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
-                        resolve(googleMapsLink);
+                        const mapboxLink = `https://www.mapbox.com/directions/?origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
+                        resolve(mapboxLink);
                     },
                     (error) => {
                         console.error("Error getting user location:", error);
@@ -216,9 +214,35 @@ const EventDetails: React.FC = () => {
                 );
             });
         } else {
-            return `https://www.google.com/maps/search/?q=${encodeURIComponent(event?.location || "")}`;
+            return `https://www.mapbox.com/directions/?destination=${encodeURIComponent(event?.location || "")}`;
         }
     };
+
+
+    // const generateGoogleMapsLink = async () => {
+    //     if (event?.latitude && event?.longitude) {
+    //         return new Promise<string>((resolve, reject) => {
+    //             if (!navigator.geolocation) {
+    //                 reject("Geolocation is not supported by this browser.");
+    //             }
+
+    //             navigator.geolocation.getCurrentPosition(
+    //                 (position) => {
+    //                     const userLatitude = position.coords.latitude;
+    //                     const userLongitude = position.coords.longitude;
+    //                     const googleMapsLink = `https://www.google.com/maps/dir/?api=1&origin=${userLatitude},${userLongitude}&destination=${event.latitude},${event.longitude}`;
+    //                     resolve(googleMapsLink);
+    //                 },
+    //                 (error) => {
+    //                     console.error("Error getting user location:", error);
+    //                     reject("Unable to retrieve your location.");
+    //                 }
+    //             );
+    //         });
+    //     } else {
+    //         return `https://www.google.com/maps/search/?q=${encodeURIComponent(event?.location || "")}`;
+    //     }
+    // };
 
     if (loading) {
         return <div>Loading event details...</div>;
@@ -247,6 +271,20 @@ const EventDetails: React.FC = () => {
                         <button
                             onClick={async () => {
                                 try {
+                                    const mapboxLink = await generateMapboxLink();
+                                    window.open(mapboxLink, "_blank");
+                                } catch (error) {
+                                    alert(error);
+                                }
+                            }}
+                            className="text-blue-600 underline hover:text-blue-800"
+                        >
+                            {event.location}
+                        </button>
+
+                        {/* <button
+                            onClick={async () => {
+                                try {
                                     const googleMapsLink = await generateGoogleMapsLink();
                                     window.open(googleMapsLink, "_blank");
                                 } catch (error) {
@@ -256,7 +294,7 @@ const EventDetails: React.FC = () => {
                             className="text-blue-600 underline hover:text-blue-800"
                         >
                             {event.location}
-                        </button>
+                        </button> */}
                     </div>
                     <div className="flex flex-col">
                         <strong className="text-gray-600">Start Time:</strong>
